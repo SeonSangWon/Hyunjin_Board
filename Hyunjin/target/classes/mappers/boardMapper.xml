@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.hyunjin.mapper.boardMapper">
+
+	<!-- 게시글 출력 페이징 갯수 -->
+	<select id="BoardListCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			board
+	</select>
+
+	<!-- 게시글 출력 페이징  -->
+	<select id="BoardList" resultType="boardDTO">
+		SELECT
+			*
+		FROM
+			board
+		ORDER BY
+			bid DESC
+		LIMIT
+			#{startList}, #{listSize}
+	</select>
+	
+	<!-- 메인 페이지에 보여질 최신 5개의 게시글 출력 -->
+	<select id="BoardListMain" resultType="boardDTO">
+		SELECT
+			*
+		FROM
+			board
+		ORDER BY
+			bid DESC
+		LIMIT
+			0, 5
+	</select>
+	
+	<!-- 게시글 내용 조회 -->
+	<select id="BoardView" resultType="boardDTO">
+		SELECT
+			*
+		FROM
+			board
+		WHERE
+			bid=#{bid}
+	</select>
+
+	<!-- 게시글 작성 -->
+	<insert id="BoardInsert">
+		INSERT INTO board(
+			bid,
+			name,
+			password,
+			phone,
+			title,
+			comment
+			)
+			VALUES(
+				(SELECT IFNULL(MAX(bid)+1, 1) FROM board b),
+				#{name},
+				#{password},
+				#{phone},
+				#{title},
+				#{comment}
+			)
+	</insert>
+
+	<!-- 게시글 수정 -->
+	<update id="BoardUpdate">
+		UPDATE
+			board
+		SET
+			name=#{name},
+			password=#{password},
+			phone=#{phone},
+			title=#{title},
+			comment=#{comment},
+			reg_date=#{reg_date}
+		WHERE
+			bid=#{bid}
+	</update>
+	
+	<!-- 게시글 조회 시, 조회수 + 1 -->
+	<update id="BoardRefUpdate">
+		UPDATE
+			board
+		SET
+			ref=ref+1
+		WHERE
+			bid=#{bid}
+	</update>
+
+	<!-- 게시글 삭제 -->	
+	<delete id="BoardDelete">
+		DELETE
+		FROM
+			board 
+		WHERE
+			bid=#{bid}
+	</delete>
+</mapper>
