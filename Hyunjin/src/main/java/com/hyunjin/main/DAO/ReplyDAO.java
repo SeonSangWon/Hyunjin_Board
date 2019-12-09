@@ -22,6 +22,13 @@ public class ReplyDAO implements IReplyDAOd {
 
 		return sqlSession.selectList(Namespace+".ReplyView", replyDTO);
 	}
+	
+	//댓글 수정 시 필요한 비밀번호 유효성 검사
+	@Override
+	public ReplyDTO replyUpdatePassword(ReplyDTO replyDTO) {
+		
+		return sqlSession.selectOne(Namespace+".replyUpdatePassword", replyDTO);
+	}
 
 	//댓글 등록
 	@Override
