@@ -20,6 +20,17 @@ public class ReplyService implements IReplyService {
 
 		return replyDAO.ReplyView(replyDTO);
 	}
+	
+	//댓글 수정 시 필요한 비밀번호 유효성 검사
+	@Override
+	public String replyUpdatePassword(ReplyDTO replyDTO) {
+		
+		String password = null;
+		replyDTO = replyDAO.replyUpdatePassword(replyDTO);
+		password = replyDTO.getPassword();
+		
+		return password;
+	}
 
 	//댓글 등록
 	@Override
@@ -43,3 +54,4 @@ public class ReplyService implements IReplyService {
 	}
 
 }
+
