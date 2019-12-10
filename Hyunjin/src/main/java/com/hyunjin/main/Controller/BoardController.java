@@ -87,6 +87,7 @@ public class BoardController {
 		return "board/boardView";
 	}
 	
+	/*
 	//게시글 등록
 	@RequestMapping(value="insertBoard", method=RequestMethod.POST)
 	public String insert(BoardDTO boardDTO, HttpServletResponse response, Model model) throws Exception {
@@ -116,6 +117,24 @@ public class BoardController {
 		
 		return "movePage";
 	}
+	*/
+	
+	//게시글 등록
+		@RequestMapping(value="insertBoard", method=RequestMethod.POST)
+		public String insert(BoardDTO boardDTO, Model model) {
+			
+			try {
+				//vo.setComment(vo.getComment().replace("\r\n","<br>"));
+				
+				boardService.BoardInsert(boardDTO);
+				model.addAttribute("insertBoard", "success");
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			return "redirect:boardList";
+		}
 	
 	//게시글 수정
 	@RequestMapping(value = "updateBoard", method = RequestMethod.POST)
