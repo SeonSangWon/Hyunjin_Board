@@ -15,6 +15,18 @@
 			bid=#{bid}
 	</select>
 	
+	<!-- 댓글 수정 시 필요한 비밀번호 유효성 검사 -->
+	<select id="replyUpdatePassword" resultType="replyDTO">
+		SELECT
+			password
+		FROM
+			reply
+		WHERE
+			uid=#{uid}
+		AND
+			bid=#{bid}
+	</select>
+	
 	<!-- 댓글 등록 -->
 	<insert id="ReplyInsert">
 		INSERT INTO reply(
