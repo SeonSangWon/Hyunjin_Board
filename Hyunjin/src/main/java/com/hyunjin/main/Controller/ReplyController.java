@@ -1,6 +1,12 @@
 package com.hyunjin.main.Controller;
 
+import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,37 +51,12 @@ public class ReplyController {
 	}
 	
 	//댓글 수정
-	@RequestMapping(value = "replyUpdate", method = RequestMethod.POST)
-	public String update_POST(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
-			
-		int uid = 0;
-		uid = Integer.parseInt(request.getParameter("uid"));
+	@RequestMapping(value = "replyUpdateGet")
+	public String update_GET(ReplyDTO replyDTO, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+				
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
 		
-		try {
-			System.out.println("=====" + uid + "=====");
-			
-			replyService.ReplyUpdate(replyDTO);
-			logger.info("=====Reply Data Update=====");
-				
-			model.addAttribute("url", "boardView");
-			model.addAttribute("bid", replyDTO.getBid());
-				
-		}catch(Exception e) {
-			e.printStackTrace();
-			logger.info("ReplyUpdate() Error!!!");
-			
-			model.addAttribute("url", "boardView");
-			model.addAttribute("bid", replyDTO.getBid());
-		}
-		
-		return "movePage";
-	}
-	
-	/*
-	//댓글 수정
-	@RequestMapping(value = "replyUpdateGet", method = RequestMethod.GET)
-	public String update_GET(ReplyVO vo, Model model, HttpServletRequest request) {
-				
 		int uid = 0;
 		int bid = 0;
 		uid = Integer.parseInt(request.getParameter("uid"));
@@ -87,28 +68,59 @@ public class ReplyController {
 		try {
 		
 			//prompt값으로 받아온 비밀번호 값으로 맞다면 수정 틀리다면 Error
-			Date date = new Date();
+			replyDTO.setBid(bid);
+			replyDTO.setUid(uid);
+			String getPassword = replyService.replyUpdatePassword(replyDTO);
 			
-			vo.setReg_date(date);
-			vo.setPassword(password);
-			vo.setComment("안녕하세요 수정1");
-			service.replyUpdate(vo);
-			
-			logger.info("=====Reply Data Update=====");
-				
-			model.addAttribute("url", "boardView");
-			model.addAttribute("bid", vo.getBid());
-				
+			if(getPassword.equals(password))
+			{
+				model.addAttribute("url", "replyUpdateGet");
+				model.addAttribute("bid", bid);
+			}
+			else
+			{
+				out.println("<script>"
+						+ "alert('비밀번호가 일치하지 않습니다.');"
+						+ "history.back();"
+	        			+ "</script>");
+	            out.flush();
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.info("replyUpdate() Error!!!");
-			
-			model.addAttribute("url", "boardView");
-			model.addAttribute("bid", vo.getBid());
-			model.addAttribute("msg", "updateFail");
 		}
 		
-		return null;
+		return "movePage";
 	}
-	*/
+	
+	@RequestMapping("replyUpdate")
+	public String replyUpdate(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
+		
+		String comment = request.getParameter("comment");
+		int uid = Integer.parseInt(request.getParameter("uid"));
+		int bid = Integer.parseInt(request.getParameter("bid"));
+		
+		//현재 시각 구하기
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd kk:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		String time = null;
+		time = formatter.format(cal.getTime());
+		Timestamp reg_date = Timestamp.valueOf(time);
+		System.out.println("댓글 변경 시각 :  " + reg_date);
+		
+		try {
+			
+			replyDTO.setUid(uid);
+			replyDTO.setComment(comment);
+			replyDTO.setReg_date(reg_date);
+			
+			replyService.ReplyUpdate(replyDTO);
+			
+			model.addAttribute("bid", bid);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:boardView";
+	}
 }
