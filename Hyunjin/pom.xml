@@ -80,7 +80,13 @@
 		    <version>1.16</version>
 		</dependency>
 		<!-- END MySQL -->
-				
+		
+		<!-- JSON -->
+		<dependency>
+		    <groupId>org.codehaus.jackson</groupId>
+		    <artifactId>jackson-mapper-asl</artifactId>
+		    <version>1.9.13</version>
+		</dependency>
 		
 		<!-- AspectJ -->
 		<dependency>
