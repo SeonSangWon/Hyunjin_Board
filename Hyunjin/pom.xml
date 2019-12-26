@@ -81,7 +81,7 @@
 		</dependency>
 		<!-- END MySQL -->
 		
-		<!-- JSON -->
+		<!-- JSON() -->
 		<dependency>
 		    <groupId>org.codehaus.jackson</groupId>
 		    <artifactId>jackson-mapper-asl</artifactId>
