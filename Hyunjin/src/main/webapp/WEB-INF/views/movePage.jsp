@@ -32,5 +32,6 @@
 <!-- ReplyUpdate -->
 <c:if test="${url eq 'boardView'}">
 </c:if>
+	
 </body>
 </html>
