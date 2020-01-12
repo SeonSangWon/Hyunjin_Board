@@ -123,4 +123,18 @@ public class ReplyController {
 		
 		return "redirect:boardView";
 	}
+	
+	//댓글 삭제
+	@RequestMapping("replyDelete")
+	public String replyDelete(ReplyDTO replyDTO, HttpServletRequest request) {
+		
+		try {
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			logger.info("replyDelete() Error!!!");
+		}
+		
+		return "";
+	}
 }
