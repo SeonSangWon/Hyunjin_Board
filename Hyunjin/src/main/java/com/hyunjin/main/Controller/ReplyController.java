@@ -128,8 +128,11 @@ public class ReplyController {
 	@RequestMapping("replyDelete")
 	public String replyDelete(ReplyDTO replyDTO, HttpServletRequest request) {
 		
+		int uid = Integer.parseInt(request.getParameter("uid"));
+		int bid = Integer.parseInt(request.getParameter("bid"));
+		
 		try {
-			
+					
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.info("replyDelete() Error!!!");
