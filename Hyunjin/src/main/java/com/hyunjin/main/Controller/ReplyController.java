@@ -130,6 +130,7 @@ public class ReplyController {
 		
 		int uid = Integer.parseInt(request.getParameter("uid"));
 		int bid = Integer.parseInt(request.getParameter("bid"));
+		//비밀번호를 입력받아 일치하면 삭제하도록 수행
 		
 		try {
 					
