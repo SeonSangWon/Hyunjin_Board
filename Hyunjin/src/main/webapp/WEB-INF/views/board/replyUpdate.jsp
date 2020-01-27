@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <!-- c태그를 사용하기위한 태그 라이브러리 -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!-- fmt를 사용하기위한 태그 라이브러리 -->
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- fn를 사용하기위한 태그 라이브러리 -->
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,7 +52,8 @@
 					</tr>
 					<tr>
 						<td colspan="2">
-							<textarea class="form-control" name="comment" rows="5" cols="30">${reply.comment}</textarea>
+							<!-- <c:out value="${fn:replace(fn:replace(fn:replace(fn:replace(placeDetailData.content, LF, ''), CR, ''), TF, ''), RF, '')}" escapeXml="true"/>   -->
+							<textarea class="form-control" name="comment" rows="5" cols="30"></textarea>
 							<br />
 							<input type="submit" value="등록" class="form-control" style="width: 100px;"/>
 						</td>
