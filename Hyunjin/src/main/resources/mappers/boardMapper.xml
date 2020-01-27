@@ -48,7 +48,6 @@
 	</select>
 
 	<!-- 게시글 작성 -->
-	<!-- auto_increment 속성을 사용하지 않고 MAX() 사용 -->
 	<insert id="BoardInsert">
 		INSERT INTO board(
 			bid,

@@ -25,108 +25,113 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container" align="center">
-<table class="container">
-	<c:forEach items="${view}" var="board">
-		<tr>
-			<td>
-				${board.title}
-			</td>
-			<td align="right">
-				조회수 : ${board.ref}
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				${board.name}
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<textarea class="form-control" name="comment" rows="10" cols="30"
-					readonly="readonly">
-					${board.comment}
-				</textarea>
-			</td>
-		</tr>
-	</c:forEach>
-</table>
-<br/>
-</div>
-
-<div>
-<!-- 댓글 -->
-<form method="POST" action="replyInsert">
-	<table>
-		<tr>
-			<td>
-				NAME 
-			</td>
-			<td>
-				<c:forEach items="${view}" var="board">
-					<input type="hidden" name="bid" value="${board.bid}" />
-				</c:forEach>
-				<input type="text" name="name" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				PASSWORD 
-			</td>
-			<td>
-				<input type="password" name="password" />
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<textarea class="form-control" name="comment" rows="5" cols="30"></textarea>
-				<br/>
-				<input type="submit" value="등록" />
-			</td>
-		</tr>
-	</table>
-</form>
-<br/>
-<br/>
-
-<table>
-	<c:forEach items="${replyView}" var="reply">
-		<tr>
-			<td align="right">
-				작성일자 : <fmt:formatDate value="${reply.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" timeZone="KST"/>
-			</td>
-		</tr>
-		<tr>
-			<td width="300px">
-				${reply.comment}
-			</td>
-			<td>
-				작성자 : ${reply.name} <br/>
-				<!-- 
-				<a href="<c:url value="replyUpdateGet"/>?uid=${reply.uid}&bid=${reply.bid}">
-					수정 
-				</a> -->
-				<span onclick="msg();">
-					수정
-				</span>
-					&nbsp;&nbsp;&nbsp;
-				<a href="">
-					삭제
-				</a>
-			</td>
-		</tr>
-<script>
-	function msg(){
+	<div class="container" align="center">
+		<!-- 게시글 내용 -->
+		<c:forEach items="${view}" var="board">
+			<table class="container">
+				<tr>
+					<td>${board.title}</td>
+					<td align="right">조회수 : ${board.ref}</td>
+				</tr>
+				<tr>
+					<td colspan="2">${board.name}</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea class="form-control" name="comment"
+							rows="10" cols="30" readonly="readonly">${board.comment}
+						</textarea>
+					</td>
+				</tr>
+			</table>
+			<br />
 		
-		var password = "";
+			<!-- 댓글 입력 -->
+			<form method="POST" action="replyInsert">
+				<table class="container">
+					<tr>
+						<td style="width: 150px;">NAME</td>
+						<td>
+							<input type="hidden" name="bid" value="${board.bid}" />
+							<input type="text" name="name" class="form-control"/>
+						</td>
+					</tr>
+					<tr>
+						<td>PASSWORD</td>
+						<td>
+							<input type="password" name="password" class="form-control" maxlength="4" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<textarea class="form-control" name="comment" rows="5" cols="30">
+							</textarea>
+							<br />
+							<input type="submit" value="등록" class="form-control" style="width: 100px;"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</c:forEach>
+		<br />
+		<br />
 		
-		password = prompt("비밀번호 4자리를 입력해주세요.");
-		location.href="<c:url value='replyUpdateGet'/>?password=" + password
-				+ "&uid=${reply.uid}&bid=${reply.bid}";
-	}
-</script>
-	</c:forEach>
-</table>
-</div>
+		<!-- 댓글 내용 -->
+		<table class="container">
+			<c:forEach items="${replyView}" var="reply">
+				<tr>
+					<td align="right" colspan="2">
+						<hr>
+						작성일자 : <fmt:formatDate value="${reply.reg_date}" pattern="yyyy-MM-dd HH:mm:ss" timeZone="KST"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						${reply.comment}						
+					</td>
+					<td align="right">
+						작성자 : ${reply.name} <br />
+						<span onclick="replyUpdate();">
+							수정
+						</span>
+							&nbsp;&nbsp;&nbsp;
+						<span onclick="replyDelete();">
+							삭제
+						</span>
+					</td>
+				</tr>
+				<script>
+				function replyUpdate() {
+
+					var password = "";
+					var page = <%= request.getParameter("page") %>;
+					var range = <%= request.getParameter("range") %>;
+
+					//password + uid + bid + page + range
+					password = prompt("비밀번호 4자리를 입력해주세요.");
+					location.href = "replyUpdateGet?password=" + password
+							+ "&uid=${reply.uid}&bid=${reply.bid}&page=" + page + "&range=" + range;
+				}
+				
+				function replyDelete() {
+					
+					var password = "";
+					var page = <%= Integer.parseInt(request.getParameter("page")) %>;
+					var range = <%= Integer.parseInt(request.getParameter("range")) %>;
+
+					//password + uid + bid + page + range
+					password = prompt("비밀번호 4자리를 입력해주세요.");
+					location.href = "replyDelete?password=" + password
+							+ "&uid=${reply.uid}&bid=${reply.bid}&page=" + page + "&range=" + range;
+					
+				}
+				</script>
+			</c:forEach>
+		</table>
+		<div align="center">
+			<button onclick="location.href='boardList?page=<%= Integer.parseInt(request.getParameter("page")) %>&range=<%= Integer.getInteger(request.getParameter("range")) %>'">뒤로가기</button>
+		</div>
+	</div>
+	
 </body>
 </html>

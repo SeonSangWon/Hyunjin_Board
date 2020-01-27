@@ -48,7 +48,6 @@ td {
     #link_bar a { text-decoration:none; }
 </style>
 <body>
-
 	<div align="center" id="link_bar">
 		<table class="table">
 			<tr>
@@ -75,7 +74,8 @@ td {
 			<c:forEach items="${listAll}" var="listAll">
 				<tr>
 					<td align="center">
-						<a href="<c:url value='refUpdate'/>?bid=${listAll.bid}">
+						<!-- boardView로 넘겨줘야할 값 : page / range / bid -->
+						<a href="<c:url value='boardView'/>?page=${pagination.page}&range=${pagination.page}&bid=${listAll.bid}">
 							${listAll.title}
 						</a>
 					</td>
@@ -164,6 +164,6 @@ td {
 
 			location.href = url;
 		}
-	</script>
+	</script>	
 </body>
 </html>

@@ -57,4 +57,5 @@ public class ReplyDAO implements IReplyDAO {
 
 		sqlSession.delete(Namespace+".ReplyDelete", replyDTO);
 	}
+
 }

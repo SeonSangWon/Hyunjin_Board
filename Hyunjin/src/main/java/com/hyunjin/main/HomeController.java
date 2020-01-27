@@ -21,5 +21,6 @@ public class HomeController {
 	public String boardWrite(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return "board/boardWrite";
-	}	
+	}
+	
 }

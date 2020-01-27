@@ -2,7 +2,7 @@ package com.hyunjin.main.util;
 
 public class Pagination {
 
-	private int listSize = 4;             //초기값으로 목록개수를 10으로 셋팅
+	private int listSize = 5;             //초기값으로 목록개수를 10으로 셋팅
 	private int rangeSize = 4;            //초기값으로 페이지범위를 4으로 셋팅
 	private int page;
 	private int range;
@@ -90,7 +90,7 @@ public class Pagination {
 		this.listCnt = listCnt;
 
 		//전체 페이지수 
-		this.pageCnt = (int) Math.ceil(listCnt/listSize);
+		this.pageCnt = (int) Math.ceil((double)listCnt/listSize);
 
 		//시작 페이지
 		this.startPage = (range - 1) * rangeSize + 1 ;	

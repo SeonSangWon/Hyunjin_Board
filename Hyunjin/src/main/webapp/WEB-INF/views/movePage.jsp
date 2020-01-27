@@ -28,10 +28,13 @@
 	<meta charset="UTF-8" http-equiv="refresh" content="0;url=<c:url value='boardView'/>?bid=${bid}">
 </c:if>
 
+<!-- replyUpdateGet / home.jsp -->
+<c:if test="${url eq 'replyUpdateGet'}">
+	<meta charset="UTF-8" http-equiv="refresh" content="0;url=<c:url value='boardView'/>?bid=${bid}">
+</c:if>
 
 <!-- ReplyUpdate -->
 <c:if test="${url eq 'boardView'}">
 </c:if>
-	
 </body>
 </html>

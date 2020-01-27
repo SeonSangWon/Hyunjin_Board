@@ -159,4 +159,5 @@ public class ReplyController {
 		
 		return "redirect:boardView?bid=" + bid + "&page=" + page + "&range=" + range;
 	}
+
 }
