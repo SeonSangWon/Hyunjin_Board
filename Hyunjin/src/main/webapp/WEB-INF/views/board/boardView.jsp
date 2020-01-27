@@ -116,8 +116,8 @@
 				function replyDelete() {
 					
 					var password = "";
-					var page = <%= Integer.parseInt(request.getParameter("page")) %>;
-					var range = <%= Integer.parseInt(request.getParameter("range")) %>;
+					var page = <%= request.getParameter("page") %>;
+					var range = <%= request.getParameter("range") %>;
 
 					//password + uid + bid + page + range
 					password = prompt("비밀번호 4자리를 입력해주세요.");
@@ -129,7 +129,7 @@
 			</c:forEach>
 		</table>
 		<div align="center">
-			<button onclick="location.href='boardList?page=<%= Integer.parseInt(request.getParameter("page")) %>&range=<%= Integer.getInteger(request.getParameter("range")) %>'">뒤로가기</button>
+			<button onclick="location.href='boardList?page=<%= request.getParameter("page") %>&range=<%= request.getParameter("range") %>'">뒤로가기</button>
 		</div>
 	</div>
 	
