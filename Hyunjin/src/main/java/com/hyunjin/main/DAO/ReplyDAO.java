@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.hyunjin.main.DTO.ReplyDTO;
 
 @Repository
-public class ReplyDAO implements IReplyDAOd {
+public class ReplyDAO implements IReplyDAO {
 	
 	@Autowired
 	private SqlSession sqlSession;
@@ -23,11 +23,18 @@ public class ReplyDAO implements IReplyDAOd {
 		return sqlSession.selectList(Namespace+".ReplyView", replyDTO);
 	}
 	
+	//댓글 수정 시, 해당 댓글 정보 조회
+	@Override
+	public List<ReplyDTO> ReplyOne(ReplyDTO replyDTO) {
+	
+		return sqlSession.selectList(Namespace+".ReplyOne", replyDTO);
+	}
+	
 	//댓글 수정 시 필요한 비밀번호 유효성 검사
 	@Override
-	public ReplyDTO replyUpdatePassword(ReplyDTO replyDTO) {
+	public ReplyDTO ReplyPassword(ReplyDTO replyDTO) {
 		
-		return sqlSession.selectOne(Namespace+".replyUpdatePassword", replyDTO);
+		return sqlSession.selectOne(Namespace+".ReplyPassword", replyDTO);
 	}
 
 	//댓글 등록
@@ -50,5 +57,4 @@ public class ReplyDAO implements IReplyDAOd {
 
 		sqlSession.delete(Namespace+".ReplyDelete", replyDTO);
 	}
-
 }
