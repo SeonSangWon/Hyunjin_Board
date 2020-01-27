@@ -1,12 +1,10 @@
 package com.hyunjin.main.Controller;
 
-import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,7 @@ public class ReplyController {
 	private IReplyService replyService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ReplyController.class);
-	
+		
 	//댓글 등록
 	@RequestMapping(value = "replyInsert", method = RequestMethod.POST)
 	public String insert(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
@@ -50,78 +48,85 @@ public class ReplyController {
 		return "movePage";
 	}
 	
-	//댓글 수정
+	//댓글 수정 - 사용자 인증
 	@RequestMapping(value = "replyUpdateGet")
-	public String update_GET(ReplyDTO replyDTO, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-				
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
+	public String update_GET(ReplyDTO replyDTO, Model model, HttpServletRequest request) throws Exception {
 		
-		int uid = 0;
-		int bid = 0;
-		uid = Integer.parseInt(request.getParameter("uid"));
-		bid = Integer.parseInt(request.getParameter("bid"));
-		
-		//비밀번호 체킹
+		int uid = Integer.parseInt(request.getParameter("uid"));
+		int bid = Integer.parseInt(request.getParameter("bid"));
+		int page = Integer.parseInt(request.getParameter("page"));
+		int range = Integer.parseInt(request.getParameter("range"));
 		String password = request.getParameter("password");
+		String url = null;
 			
 		try {
 		
-			//prompt값으로 받아온 비밀번호 값으로 맞다면 수정 틀리다면 Error
 			replyDTO.setBid(bid);
 			replyDTO.setUid(uid);
-			String getPassword = replyService.replyUpdatePassword(replyDTO);
 			
-			if(getPassword.equals(password))
+			String result = replyService.replyPassword(replyDTO, password);
+			
+			if(result.equals("success"))
 			{
-				model.addAttribute("url", "replyUpdateGet");
-				model.addAttribute("bid", bid);
+				//수정 페이지(replyUpdateForm) 
+				url = "replyUpdateForm?bid=" + bid + "&uid=" + uid + "&page=" + page + "&range=" + range;
 			}
 			else
 			{
-				out.println("<script>"
-						+ "alert('비밀번호가 일치하지 않습니다.');"
-						+ "history.back();"
-	        			+ "</script>");
-	            out.flush();
+				url = "boardView?bid=" + bid + "&page=" + page + "&range=" + range;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.info("replyUpdate() Error!!!");
 		}
 		
-		return "movePage";
+		return "redirect:" + url;
 	}
 	
+	//댓글 수정 화면 - board/replyUpdate.jsp
+	@RequestMapping("replyUpdateForm")
+	public String replyUpdateForm(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
+
+		int uid = Integer.parseInt(request.getParameter("uid"));
+		int bid = Integer.parseInt(request.getParameter("bid"));
+		int page = Integer.parseInt(request.getParameter("page"));
+		int range = Integer.parseInt(request.getParameter("range"));
+		
+		model.addAttribute("ReplyOne", replyService.ReplyOne(replyDTO));		//댓글 정보
+		model.addAttribute("page", page);										//페이징
+		model.addAttribute("range", range);										//페이징
+		
+		return "board/replyUpdate";
+	}
+	
+	//댓글 수정
 	@RequestMapping("replyUpdate")
 	public String replyUpdate(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
 		
-		String comment = request.getParameter("comment");
 		int uid = Integer.parseInt(request.getParameter("uid"));
 		int bid = Integer.parseInt(request.getParameter("bid"));
-		
-		//현재 시각 구하기
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd kk:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		String time = null;
-		time = formatter.format(cal.getTime());
-		Timestamp reg_date = Timestamp.valueOf(time);
-		System.out.println("댓글 변경 시각 :  " + reg_date);
+		int page = Integer.parseInt(request.getParameter("page"));
+		int range = Integer.parseInt(request.getParameter("range"));
+		String comment = request.getParameter("comment");
+		String password = request.getParameter("password");
+		String url = null;
 		
 		try {
 			
+			//줄바꿈 처리
+			comment = comment.replace("\r\n","<br>");
+			
 			replyDTO.setUid(uid);
 			replyDTO.setComment(comment);
-			replyDTO.setReg_date(reg_date);
-			
 			replyService.ReplyUpdate(replyDTO);
 			
-			model.addAttribute("bid", bid);
+			url = "boardView?bid=" + bid + "&uid=" + uid + "&page=" + page + "&range=" + range;
 		}catch(Exception e) {
 			e.printStackTrace();
+			url = "boardList";				//Error 발생 시, 전체 게시글 페이지로 이동
 		}
 		
-		return "redirect:boardView";
+		return "redirect:" + url;
 	}
 	
 	//댓글 삭제
@@ -130,15 +135,32 @@ public class ReplyController {
 		
 		int uid = Integer.parseInt(request.getParameter("uid"));
 		int bid = Integer.parseInt(request.getParameter("bid"));
-		//비밀번호를 입력받아 일치하면 삭제하도록 수행
+		int page = Integer.parseInt(request.getParameter("page"));
+		int range = Integer.parseInt(request.getParameter("range"));
+		String password = request.getParameter("password");
+		String result = null;
 		
 		try {
-					
+			
+			replyDTO.setUid(uid);
+			replyDTO.setBid(bid);
+			
+			result = replyService.replyPassword(replyDTO, password);
+			if(result.equals("success"))
+			{
+				//replyService.ReplyDelete(replyDTO);
+				
+				//해당 게시글로 이동
+			}
+			else
+			{
+			
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.info("replyDelete() Error!!!");
 		}
 		
-		return "";
+		return "redirect:boardView?bid=" + bid + "&page=" + page + "&range=" + range;
 	}
 }
