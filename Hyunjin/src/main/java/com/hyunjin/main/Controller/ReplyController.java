@@ -1,9 +1,5 @@
 package com.hyunjin.main.Controller;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -64,7 +60,7 @@ public class ReplyController {
 			replyDTO.setBid(bid);
 			replyDTO.setUid(uid);
 			
-			String result = replyService.replyPassword(replyDTO, password);
+			String result = replyService.ReplyPassword(replyDTO, password);
 			
 			if(result.equals("success"))
 			{
@@ -145,7 +141,7 @@ public class ReplyController {
 			replyDTO.setUid(uid);
 			replyDTO.setBid(bid);
 			
-			result = replyService.replyPassword(replyDTO, password);
+			result = replyService.ReplyPassword(replyDTO, password);
 			if(result.equals("success"))
 			{
 				//replyService.ReplyDelete(replyDTO);
