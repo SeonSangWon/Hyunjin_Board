@@ -5,14 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyunjin.main.DAO.IReplyDAOd;
+import com.hyunjin.main.DAO.IReplyDAO;
 import com.hyunjin.main.DTO.ReplyDTO;
 
 @Service
 public class ReplyService implements IReplyService {
 	
 	@Autowired
-	private IReplyDAOd replyDAO;
+	private IReplyDAO replyDAO;
 
 	//게시글에 맞는 댓글 조회
 	@Override
@@ -21,15 +21,29 @@ public class ReplyService implements IReplyService {
 		return replyDAO.ReplyView(replyDTO);
 	}
 	
+	//댓글 수정 시, 해당 댓글 정보 조회
+	@Override
+	public List<ReplyDTO> ReplyOne(ReplyDTO replyDTO) {
+		
+		return replyDAO.ReplyOne(replyDTO);
+	}
+	
 	//댓글 수정 시 필요한 비밀번호 유효성 검사
 	@Override
-	public String replyUpdatePassword(ReplyDTO replyDTO) {
+	public String ReplyPassword(ReplyDTO replyDTO, String password) {
 		
-		String password = null;
-		replyDTO = replyDAO.replyUpdatePassword(replyDTO);
-		password = replyDTO.getPassword();
+		String result = null;
+		String getPassword = null;
 		
-		return password;
+		replyDTO = replyDAO.ReplyPassword(replyDTO);
+		getPassword = replyDTO.getPassword();
+		
+		if(getPassword.equals(password))
+			result = "success";
+		else
+			result = "fail";
+		
+		return result;
 	}
 
 	//댓글 등록
@@ -52,6 +66,4 @@ public class ReplyService implements IReplyService {
 
 		replyDAO.ReplyDelete(replyDTO);
 	}
-
 }
-
