@@ -4,6 +4,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- fn를 사용하기위한 태그 라이브러리 -->
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%
+	pageContext.setAttribute("br", "<br>"); //br 태그
+	pageContext.setAttribute("cn", "\n"); //Enter
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,19 +45,18 @@
 					<tr>
 						<td style="width: 150px;">NAME</td>
 						<td>
-							<input type="text" name="name" class="form-control" value="${reply.name}" />
+							<input type="text" name="name" class="form-control" value="${reply.name}" disabled="disabled" />
 						</td>
 					</tr>
 					<tr>
 						<td>PASSWORD</td>
 							<td>
-							<input type="password" name="password" class="form-control" maxlength="4" />
+							<input type="password" name="password" class="form-control" maxlength="4" required />
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
-							<!-- <c:out value="${fn:replace(fn:replace(fn:replace(fn:replace(placeDetailData.content, LF, ''), CR, ''), TF, ''), RF, '')}" escapeXml="true"/>   -->
-							<textarea class="form-control" name="comment" rows="5" cols="30"></textarea>
+							<textarea class="form-control" name="comment" rows="5" cols="30"><c:out value="${fn:replace(reply.comment, br, cn)}" escapeXml="true" /></textarea>
 							<br />
 							<input type="submit" value="등록" class="form-control" style="width: 100px;"/>
 						</td>
