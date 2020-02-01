@@ -21,140 +21,244 @@ public class ReplyController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ReplyController.class);
 		
-	//댓글 등록
+	/**
+	 * 댓글 등록
+	 * @param replyDTO
+	 * @param bid		게시글 번호
+	 * @param page		페이징
+	 * @param range 	페이징
+	 * @param msg		댓글 등록 메시지
+	 * @return boardView.jsp
+	 */
 	@RequestMapping(value = "replyInsert", method = RequestMethod.POST)
-	public String insert(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
+	public String replyInsert(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
+		
+		//초기화
+		int page = 1;
+		int range = 1;
 		
 		try {
+			page = Integer.parseInt(request.getParameter("page"));
+			range = Integer.parseInt(request.getParameter("range"));
 			
 			replyService.ReplyInsert(replyDTO);
-			logger.info("=====Reply Data Insert=====");
 			
-			model.addAttribute("url", "boardView");
+			model.addAttribute("msg", "1");
 			model.addAttribute("bid", replyDTO.getBid());
+			model.addAttribute("page", page);
+			model.addAttribute("range", range);
+			logger.info("댓글 등록");
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			logger.info("ReplyInsert() Error!!!");
 			
-			model.addAttribute("url", "boardView");
+			logger.info("replyInsert Error!!!");
+			model.addAttribute("msg", "2");
 			model.addAttribute("bid", replyDTO.getBid());
+			model.addAttribute("page", page);
+			model.addAttribute("range", range);
 		}
 		
-		return "movePage";
+		return "redirect:boardView";
 	}
 	
-	//댓글 수정 - 사용자 인증
+	/**
+	 * 댓글 수정 시, 비밀번호 인증
+	 * @param bid		게시글번호
+	 * @param uid		댓글번호
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @param password	댓글 비밀번호
+	 * @param result	비밀번호 유효 체킹
+	 * @param url		리턴할 URL
+	 * @return replyUpdateForm()
+	 */
 	@RequestMapping(value = "replyUpdateGet")
-	public String update_GET(ReplyDTO replyDTO, Model model, HttpServletRequest request) throws Exception {
+	public String passwordValidate(ReplyDTO replyDTO, Model model, HttpServletRequest request) throws Exception {
 		
-		int uid = Integer.parseInt(request.getParameter("uid"));
-		int bid = Integer.parseInt(request.getParameter("bid"));
-		int page = Integer.parseInt(request.getParameter("page"));
-		int range = Integer.parseInt(request.getParameter("range"));
-		String password = request.getParameter("password");
-		String url = null;
-			
+		//초기화
+		int bid = 1;
+		int uid = 1;
+		int page = 1;
+		int range = 1;
+		String password = "";
+		String result = "";
+		String url = "";
 		try {
-		
+			bid = Integer.parseInt(request.getParameter("bid"));
+			uid = Integer.parseInt(request.getParameter("uid"));
+			page = Integer.parseInt(request.getParameter("page"));
+			range = Integer.parseInt(request.getParameter("range"));
+			password = request.getParameter("password");
+			
 			replyDTO.setBid(bid);
 			replyDTO.setUid(uid);
 			
-			String result = replyService.ReplyPassword(replyDTO, password);
+			//사용자가 입력한 비밀번호 체킹
+			result = replyService.ReplyPassword(replyDTO, password);
 			
 			if(result.equals("success"))
 			{
-				//수정 페이지(replyUpdateForm) 
+				//비밀번호가 일치할 경우
+				//param : bid / uid / page / range
 				url = "replyUpdateForm?bid=" + bid + "&uid=" + uid + "&page=" + page + "&range=" + range;
 			}
 			else
 			{
+				//비밀번호가 틀렸을 경우
+				//param : bid / page / range
 				url = "boardView?bid=" + bid + "&page=" + page + "&range=" + range;
 			}
+			model.addAttribute("msg", "9");
+			logger.info("댓글 비밀번호 체킹");
+			
 		}catch(Exception e) {
 			e.printStackTrace();
-			logger.info("replyUpdate() Error!!!");
+			
+			logger.info("passwordValidate Error!!!");
+			url = "boardList";
+			model.addAttribute("msg", "9");
+			model.addAttribute("bid", bid);
+			model.addAttribute("page", page);
+			model.addAttribute("range", range);
 		}
 		
 		return "redirect:" + url;
 	}
 	
-	//댓글 수정 화면 - board/replyUpdate.jsp
+	/**
+	 * 댓글 수정 페이지 이동
+	 * @param bid		게시글번호
+	 * @param uid		댓글번호
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @return replyUpdate.jsp
+	 */
 	@RequestMapping("replyUpdateForm")
 	public String replyUpdateForm(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
 
-		int uid = Integer.parseInt(request.getParameter("uid"));
-		int bid = Integer.parseInt(request.getParameter("bid"));
-		int page = Integer.parseInt(request.getParameter("page"));
-		int range = Integer.parseInt(request.getParameter("range"));
-		
-		model.addAttribute("ReplyOne", replyService.ReplyOne(replyDTO));		//댓글 정보
-		model.addAttribute("page", page);										//페이징
-		model.addAttribute("range", range);										//페이징
+		//초기화
+		int bid = 1;
+		int uid = 1;
+		int page = 1;
+		int range = 1;
+		try {
+			uid = Integer.parseInt(request.getParameter("uid"));
+			bid = Integer.parseInt(request.getParameter("bid"));
+			page = Integer.parseInt(request.getParameter("page"));
+			range = Integer.parseInt(request.getParameter("range"));
+			
+			model.addAttribute("ReplyOne", replyService.ReplyOne(replyDTO));		//댓글 정보
+			model.addAttribute("page", page);										//페이징
+			model.addAttribute("range", range);										//페이징
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+			logger.info("replyUpdateForm Error!!!");
+			return "redirect:/";
+		}
 		
 		return "board/replyUpdate";
 	}
 	
-	//댓글 수정
+	/**
+	 * 댓글 수정
+	 * @param replyDTO
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @return boardView.jsp
+	 */
 	@RequestMapping("replyUpdate")
 	public String replyUpdate(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
 		
-		int uid = Integer.parseInt(request.getParameter("uid"));
-		int bid = Integer.parseInt(request.getParameter("bid"));
-		int page = Integer.parseInt(request.getParameter("page"));
-		int range = Integer.parseInt(request.getParameter("range"));
-		String comment = request.getParameter("comment");
-		String password = request.getParameter("password");
-		String url = null;
-		
+		//초기화
+		int bid = 1;
+		int uid = 1;
+		int page = 1;
+		int range = 1;
+		String comment = "";
+		String password = "";
+		String url = "";
 		try {
+			uid = Integer.parseInt(request.getParameter("uid"));
+			bid = Integer.parseInt(request.getParameter("bid"));
+			page = Integer.parseInt(request.getParameter("page"));
+			range = Integer.parseInt(request.getParameter("range"));
+			comment = request.getParameter("comment");
+			password = request.getParameter("password");
 			
 			//줄바꿈 처리
 			comment = comment.replace("\r\n","<br>");
 			
 			replyDTO.setUid(uid);
 			replyDTO.setComment(comment);
+			
 			replyService.ReplyUpdate(replyDTO);
 			
+			//param : bid / uid / page / range
 			url = "boardView?bid=" + bid + "&uid=" + uid + "&page=" + page + "&range=" + range;
+			model.addAttribute("msg", "3");
+			logger.info("댓글 수정");
+			
 		}catch(Exception e) {
 			e.printStackTrace();
-			url = "boardList";				//Error 발생 시, 전체 게시글 페이지로 이동
+			
+			logger.info("replyUpdate Error!!!");
+			url = "boardView?bid=" + bid + "&uid=" + uid + "&page=" + page + "&range=" + range;
+			model.addAttribute("msg", "4");
 		}
 		
 		return "redirect:" + url;
 	}
 	
-	//댓글 삭제
+	/**
+	 * 댓글 삭제
+	 * @param replyDTO
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @param password	비밀번호
+	 * @param result	비밀번호 유효 체킹
+	 * @return
+	 */
 	@RequestMapping("replyDelete")
-	public String replyDelete(ReplyDTO replyDTO, HttpServletRequest request) {
+	public String replyDelete(ReplyDTO replyDTO, HttpServletRequest request, Model model) {
 		
-		int uid = Integer.parseInt(request.getParameter("uid"));
-		int bid = Integer.parseInt(request.getParameter("bid"));
-		int page = Integer.parseInt(request.getParameter("page"));
-		int range = Integer.parseInt(request.getParameter("range"));
-		String password = request.getParameter("password");
-		String result = null;
-		
+		int bid = 1;
+		int uid = 1;
+		int page = 1;
+		int range = 1;
+		String password = "";
+		String result = "";
 		try {
+			bid = Integer.parseInt(request.getParameter("bid"));
+			uid = Integer.parseInt(request.getParameter("uid"));
+			page = Integer.parseInt(request.getParameter("page"));
+			range = Integer.parseInt(request.getParameter("range"));
+			password = request.getParameter("password");
 			
 			replyDTO.setUid(uid);
 			replyDTO.setBid(bid);
 			
+			//사용자가 입력한 비밀번호 체킹
 			result = replyService.ReplyPassword(replyDTO, password);
 			if(result.equals("success"))
 			{
-				//replyService.ReplyDelete(replyDTO);
-				
-				//해당 게시글로 이동
+				//비밀번호가 일치할 경우
+				replyService.ReplyDelete(replyDTO);
+				model.addAttribute("msg", "5");
 			}
 			else
 			{
-			
+				//비밀번호가 틀렸을 경우
+				model.addAttribute("msg", "6");
 			}
+			logger.info("댓글 삭제");
+			
 		}catch(Exception e) {
 			e.printStackTrace();
-			logger.info("replyDelete() Error!!!");
+			
+			logger.info("replyDelete Error!!!");
 		}
 		
 		return "redirect:boardView?bid=" + bid + "&page=" + page + "&range=" + range;

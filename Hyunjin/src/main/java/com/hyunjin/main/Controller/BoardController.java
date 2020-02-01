@@ -1,9 +1,6 @@
 package com.hyunjin.main.Controller;
 
-import java.io.PrintWriter;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +28,10 @@ public class BoardController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
-	//main.jsp (메인 페이지)
+	/**
+	 * 메인 홈페이지
+	 * return main.jsp
+	 */
 	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public String home(BoardDTO boardDTO, Model model) throws Exception{
 		logger.info("Welcome home! Hyunjin!!");
@@ -42,14 +42,22 @@ public class BoardController {
 		return "main";
 	}
 	
-	//board/boardList.jsp (게시글 전체목록 조회)
-	//페이징
+	/**
+	 * 게시글 전체목록을 조회
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @pramg msg		게시글 등록/수정/삭제 메시지
+	 * return boardList.jsp
+	 */
 	@RequestMapping(value="boardList", method=RequestMethod.GET)
 	public String boardList(BoardDTO boardDTO,
 			Model model,
+			HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "1") int range) 
 			throws Exception {
+		
+		String msg = "";
 		
 		//전체 페이지 갯수
 		int listCnt = boardService.BoardListCount();
@@ -60,155 +68,141 @@ public class BoardController {
 		
 		model.addAttribute("pagination", pagination);
 		model.addAttribute("listAll", boardService.BoardList(pagination));
-		
+		model.addAttribute("msg", request.getParameter(msg));
+				
 		return "board/boardList";
 	}
 	
-	//게시글 상세 페이지 이동
+	/**
+	 * 게시글 상세 페이지로 이동하며 해당 게시글의 조회수 + 1
+	 * @param bid		게시글번호
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @param refUpdate	조회수 중복 증가를 막는 변수
+	 * return boardView.jsp
+	 */
 	@RequestMapping(value = "boardView", method = RequestMethod.GET)
 	public String boardView(BoardDTO boardDTO, ReplyDTO replyDTO, HttpServletRequest request, Model model) {
 		
-		int bid = 0;
-		bid = Integer.parseInt(request.getParameter("bid"));
-		
+		//초기화
+		int bid = 1;
+		int page = 1;
+		int range = 1;
+		String refUpdate = "";
 		try {
+			bid = Integer.parseInt(request.getParameter("bid"));
+			page = Integer.parseInt(request.getParameter("page"));
+			range = Integer.parseInt(request.getParameter("range"));
+			refUpdate = request.getParameter("msg");
 			
 			boardDTO.setBid(bid);
 			
+			if(refUpdate == null)
+			{
+				//게시글의 조회수 + 1
+				boardService.BoardRefUpdate(boardDTO);
+			}
 			model.addAttribute("view", boardService.BoardView(boardDTO));
 			model.addAttribute("replyView", replyService.ReplyView(replyDTO));
+			model.addAttribute("page", page);
+			model.addAttribute("range", range);
+			logger.info("게시글 상세정보 조회");
 			
 		}catch(Exception e) {
 			e.printStackTrace();
+			
 			logger.info("boardView Error!!!");
 		}
 		
 		return "board/boardView";
 	}
 	
-	/*
-	//게시글 등록
+	/**
+	 * 게시글을 등록 후, 게시글 전체목록으로 이동
+	 * @param boardDTO
+	 * @return boardList.jsp
+	 */
 	@RequestMapping(value="insertBoard", method=RequestMethod.POST)
-	public String insert(BoardDTO boardDTO, HttpServletResponse response, Model model) throws Exception {
-		
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		
+	public String boardInsert(BoardDTO boardDTO, Model model) {
+
 		try {
-			//vo.setComment(vo.getComment().replace("\r\n","<br>"));
+			//줄바꿈
+			boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
 			
 			boardService.BoardInsert(boardDTO);
-			model.addAttribute("url", "insertBoard");
-			
-			
-			out.println("<script>"
-					+ "alert('게시글이 정상적으로 등록되었습니다.');"
-        			+ "</script>");
-            out.flush();
-			
-		}catch(Exception e) {
-			out.println("<script>"
-					+ "alert('알 수 없는 오류가 발생했습니다. 잠시 후 시도해주세요.');"
-					+ "history.back();"
-        			+ "</script>");
-            out.flush();
-		}
-		
-		return "movePage";
-	}
-	*/
-	
-	//게시글 등록
-		@RequestMapping(value="insertBoard", method=RequestMethod.POST)
-		public String insert(BoardDTO boardDTO, Model model) {
-			
-			try {
-				//vo.setComment(vo.getComment().replace("\r\n","<br>"));
-				
-				boardService.BoardInsert(boardDTO);
-				model.addAttribute("insertBoard", "success");
-				
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-			
-			return "redirect:boardList";
-		}
-	
-	//게시글 수정
-	@RequestMapping(value = "updateBoard", method = RequestMethod.POST)
-	public String update(BoardDTO boardDTO, HttpServletResponse response, Model model) throws Exception {
-		
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		try {
-			boardService.BoardUpdate(boardDTO);
-			model.addAttribute("url", "updateBoard");
-			
-			out.println("<script>"
-					+ "alert('게시글이 수정되었습니다.');"
-        			+ "</script>");
-            out.flush();
-			
-		}catch(Exception e) {
-			out.println("<script>"
-					+ "alert('알 수 없는 오류가 발생했습니다. 잠시 후 시도해주세요.');"
-					+ "history.back();"
-        			+ "</script>");
-            out.flush();
-		}
-		
-		return "movePage";
-	}
-	
-	//게시글 클릭 시, 조회수 +1
-	@RequestMapping(value = "refUpdate", method = RequestMethod.GET)
-	public String refUpdate(BoardDTO boardDTO, HttpServletRequest request, Model model) throws Exception {
-		
-		int bid = 0;
-		bid = Integer.parseInt(request.getParameter("bid"));
-		
-		try {
-			boardDTO.setBid(bid);
-			boardService.BoardRefUpdate(boardDTO);
-			
-			model.addAttribute("url", "boardView");
-			model.addAttribute("bid", bid);
+			model.addAttribute("msg", "1");
+			logger.info("게시글 등록");
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			logger.info("ref() Error!!!");	
+			
+			logger.info("boardInsert Error!!!");
+			model.addAttribute("msg", "2");
 		}
 		
-		return "movePage";
+		return "redirect:boardList";
 	}
 	
-	//게시글 삭제
-	@RequestMapping(value = "deleteBoard", method = RequestMethod.POST)
-	public String delete(BoardDTO boardDTO, HttpServletResponse response, Model model) throws Exception {
+	/**
+	 * 게시글 내용 수정
+	 * @param boardDTO
+	 * @param page		페이징
+	 * @param range		페이징
+	 * @return boardView.jsp
+	 */
+	@RequestMapping(value = "updateBoard", method = RequestMethod.POST)
+	public String boardUpdate(BoardDTO boardDTO, HttpServletRequest request, Model model) throws Exception {
+		
+		int page = Integer.parseInt(request.getParameter("page"));
+		int range = Integer.parseInt(request.getParameter("range"));
+		
+		try {
+			//줄바꿈
+			boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
 			
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
+			boardService.BoardUpdate(boardDTO);
+			model.addAttribute("msg", "3");
+			model.addAttribute("bid", "bid");
+			model.addAttribute("page", page);
+			model.addAttribute("range", range);
+			logger.info("게시글 수정");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+			logger.info("boardUpdate Error!!!");
+			model.addAttribute("msg", "4");
+			model.addAttribute("bid", "bid");
+			model.addAttribute("page", page);
+			model.addAttribute("range", range);
+			model.addAttribute("update", "fail");
+		}
+		
+		return "redirect:boardView";
+	}
+	
+	/**
+	 * 게시글을 삭제 후, 게시글 목록 페이지로 이동
+	 * @param boardDTO
+	 * @return boardList.jsp
+	 */
+	@RequestMapping(value = "deleteBoard", method = RequestMethod.GET)
+	public String boardDelete(BoardDTO boardDTO, Model model) throws Exception {
 			
 		try {
 			boardService.BoardDelete(boardDTO);
-			model.addAttribute("url", "deleteBoard");
 			
-			out.println("<script>"
-					+ "alert('게시글이 삭제되었습니다.');"
-	       			+ "</script>");
-	           out.flush();
-				
+			model.addAttribute("msg", "5");
+			logger.info("게시글 삭제");
+			
 		}catch(Exception e) {
-			out.println("<script>"
-					+ "alert('알 수 없는 오류가 발생했습니다. 잠시 후 시도해주세요.');"
-					+ "history.back();"
-	       			+ "</script>");
-	           out.flush();
+			e.printStackTrace();
+			
+			logger.info("boardDelete Error!!!");
+			model.addAttribute("msg", "6");
 		}
 			
-		return "movePage";
+		return "redirect:boardList";
 	}
 	
 }

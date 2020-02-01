@@ -77,7 +77,7 @@
 			phone=#{phone},
 			title=#{title},
 			comment=#{comment},
-			reg_date=#{reg_date}
+			reg_date=CURRENT_TIMESTAMP
 		WHERE
 			bid=#{bid}
 	</update>

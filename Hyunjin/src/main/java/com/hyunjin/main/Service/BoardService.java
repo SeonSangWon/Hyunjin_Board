@@ -2,9 +2,12 @@ package com.hyunjin.main.Service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyunjin.main.Controller.BoardController;
 import com.hyunjin.main.DAO.IBoardDAO;
 import com.hyunjin.main.DTO.BoardDTO;
 import com.hyunjin.main.util.Pagination;
@@ -14,6 +17,8 @@ public class BoardService implements IBoardService {
 	
 	@Autowired
 	private IBoardDAO boardDAO;
+	
+	private static final Logger logger = LoggerFactory.getLogger(BoardService.class);
 
 	//게시글 출력 페이징 갯수
 	@Override
@@ -62,6 +67,7 @@ public class BoardService implements IBoardService {
 	public void BoardRefUpdate(BoardDTO boardDTO) {
 		
 		boardDAO.BoardRefUpdate(boardDTO);
+		logger.info("▶▶▶BoardRefUpdate◀◀◀");
 	}
 
 	//게시글 삭제

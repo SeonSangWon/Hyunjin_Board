@@ -28,6 +28,30 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+<script>
+	var msg = <%= request.getParameter("msg") %>;
+
+	<%-- 
+	1: 게시글 등록
+	2: 게시글 등록 실패
+	3: 게시글 수정
+	4: 게시글 수정 실패
+	5: 게시글 삭제
+	6: 게시글 삭제 실패
+	--%>
+	if(msg == "1")
+		alert("게시글을 등록했습니다.");
+	else if(msg == "2")
+		alert("Error!! 다시 한번 등록해주세요.");
+	else if(msg == "3")
+		alert("게시글을 수정했습니다.");
+	else if(msg == "4")
+		alert("Error!! 다시 한번 수정해주세요.");
+	else if(msg == "5")
+		alert("게시글을 삭제했습니다.");
+	else if(msg == "6")
+		alert("Error!! 다시 한번 시도해주세요.");
+</script>
 <style>
 body,a {
 	font-family: 'Nanum Gothic', sans-serif;
@@ -74,8 +98,8 @@ td {
 			<c:forEach items="${listAll}" var="listAll">
 				<tr>
 					<td align="center">
-						<!-- boardView로 넘겨줘야할 값 : page / range / bid -->
-						<a href="<c:url value='boardView'/>?page=${pagination.page}&range=${pagination.page}&bid=${listAll.bid}">
+						<!-- boardView로 넘겨줘야할 값 : bid / page / range -->
+						<a href="<c:url value='boardView'/>?bid=${listAll.bid}&page=${pagination.page}&range=${pagination.page}">
 							${listAll.title}
 						</a>
 					</td>
@@ -126,6 +150,7 @@ td {
 	</c:url>
 
 	<script>
+
 		//이전 버튼 클릭
 		function fn_prev(page, range, rangeSize) {
 

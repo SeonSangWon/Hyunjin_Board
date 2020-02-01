@@ -2,12 +2,15 @@
     pageEncoding="UTF-8"%>
 <!-- c태그를 사용하기위한 태그 라이브러리 -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- fmt를 사용하기위한 태그 라이브러리 -->
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!-- fn를 사용하기위한 태그 라이브러리 -->
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	pageContext.setAttribute("br", "<br>"); //br 태그
 	pageContext.setAttribute("cn", "\n"); //Enter
 %>
+<%@ page session="true" %>
 <!DOCTYPE html>
 <html>
 <head>
