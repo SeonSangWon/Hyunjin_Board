@@ -36,27 +36,29 @@ public class ReplyController {
 		//초기화
 		int page = 1;
 		int range = 1;
-		
 		try {
 			page = Integer.parseInt(request.getParameter("page"));
 			range = Integer.parseInt(request.getParameter("range"));
 			
+			//줄바꿈
+			replyDTO.setComment(replyDTO.getComment().replace("\r\n","<br>"));
+			
 			replyService.ReplyInsert(replyDTO);
 			
-			model.addAttribute("msg", "1");
 			model.addAttribute("bid", replyDTO.getBid());
 			model.addAttribute("page", page);
 			model.addAttribute("range", range);
+			model.addAttribute("msg", "1");
 			logger.info("댓글 등록");
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 			
 			logger.info("replyInsert Error!!!");
-			model.addAttribute("msg", "2");
 			model.addAttribute("bid", replyDTO.getBid());
 			model.addAttribute("page", page);
 			model.addAttribute("range", range);
+			model.addAttribute("msg", "2");
 		}
 		
 		return "redirect:boardView";
@@ -73,7 +75,7 @@ public class ReplyController {
 	 * @param url		리턴할 URL
 	 * @return replyUpdateForm()
 	 */
-	@RequestMapping(value = "replyUpdateGet")
+	@RequestMapping(value = "passwordValidate")
 	public String passwordValidate(ReplyDTO replyDTO, Model model, HttpServletRequest request) throws Exception {
 		
 		//초기화
@@ -100,7 +102,7 @@ public class ReplyController {
 			if(result.equals("success"))
 			{
 				//비밀번호가 일치할 경우
-				//param : bid / uid / page / range
+				//param : bid / uid / page / range / msg
 				url = "replyUpdateForm?bid=" + bid + "&uid=" + uid + "&page=" + page + "&range=" + range;
 			}
 			else
@@ -108,8 +110,8 @@ public class ReplyController {
 				//비밀번호가 틀렸을 경우
 				//param : bid / page / range
 				url = "boardView?bid=" + bid + "&page=" + page + "&range=" + range;
+				model.addAttribute("msg", "9");
 			}
-			model.addAttribute("msg", "9");
 			logger.info("댓글 비밀번호 체킹");
 			
 		}catch(Exception e) {
@@ -117,10 +119,10 @@ public class ReplyController {
 			
 			logger.info("passwordValidate Error!!!");
 			url = "boardList";
-			model.addAttribute("msg", "9");
 			model.addAttribute("bid", bid);
 			model.addAttribute("page", page);
 			model.addAttribute("range", range);
+			model.addAttribute("msg", "9");
 		}
 		
 		return "redirect:" + url;
@@ -134,7 +136,7 @@ public class ReplyController {
 	 * @param range		페이징
 	 * @return replyUpdate.jsp
 	 */
-	@RequestMapping("replyUpdateForm")
+	@RequestMapping(value="replyUpdateForm", method=RequestMethod.GET)
 	public String replyUpdateForm(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
 
 		//초기화
@@ -143,10 +145,13 @@ public class ReplyController {
 		int page = 1;
 		int range = 1;
 		try {
-			uid = Integer.parseInt(request.getParameter("uid"));
 			bid = Integer.parseInt(request.getParameter("bid"));
+			uid = Integer.parseInt(request.getParameter("uid"));
 			page = Integer.parseInt(request.getParameter("page"));
 			range = Integer.parseInt(request.getParameter("range"));
+			
+			replyDTO.setBid(bid);
+			replyDTO.setUid(uid);
 			
 			model.addAttribute("ReplyOne", replyService.ReplyOne(replyDTO));		//댓글 정보
 			model.addAttribute("page", page);										//페이징
@@ -177,22 +182,16 @@ public class ReplyController {
 		int uid = 1;
 		int page = 1;
 		int range = 1;
-		String comment = "";
-		String password = "";
 		String url = "";
 		try {
 			uid = Integer.parseInt(request.getParameter("uid"));
 			bid = Integer.parseInt(request.getParameter("bid"));
 			page = Integer.parseInt(request.getParameter("page"));
 			range = Integer.parseInt(request.getParameter("range"));
-			comment = request.getParameter("comment");
-			password = request.getParameter("password");
-			
-			//줄바꿈 처리
-			comment = comment.replace("\r\n","<br>");
 			
 			replyDTO.setUid(uid);
-			replyDTO.setComment(comment);
+			//줄바꿈 처리
+			replyDTO.setComment(replyDTO.getComment().replace("\r\n","<br>"));
 			
 			replyService.ReplyUpdate(replyDTO);
 			

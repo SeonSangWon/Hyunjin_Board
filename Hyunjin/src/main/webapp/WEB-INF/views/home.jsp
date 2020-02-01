@@ -80,7 +80,7 @@ td {
 	<c:forEach items="${list}" var="list">
 	<tr>
 		<td>
-			<a href="<c:url value='boardView'/>?bid=${list.bid}">
+			<a href="<c:url value='boardView'/>?bid=${list.bid}&page=<%= 1 %>&range=<%= 1 %>">
 				${list.title}
 			</a>
 		</td>

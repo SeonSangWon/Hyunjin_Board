@@ -54,14 +54,17 @@
 					<tr>
 						<td>PASSWORD</td>
 							<td>
-							<input type="password" name="password" class="form-control" maxlength="4" required />
+							<input type="password" name="password" class="form-control" value="${reply.password}" maxlength="4" />
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
 							<textarea class="form-control" name="comment" rows="5" cols="30"><c:out value="${fn:replace(reply.comment, br, cn)}" escapeXml="true" /></textarea>
-							<br />
-							<input type="submit" value="등록" class="form-control" style="width: 100px;"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<input type="submit" value="등록" class="form-control" style="width: 100px; float:left; margin-right: 10px;"/>
 						</td>
 					</tr>
 				</table>

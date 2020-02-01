@@ -161,21 +161,20 @@ public class BoardController {
 			boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
 			
 			boardService.BoardUpdate(boardDTO);
-			model.addAttribute("msg", "3");
 			model.addAttribute("bid", "bid");
 			model.addAttribute("page", page);
 			model.addAttribute("range", range);
+			model.addAttribute("msg", "3");
 			logger.info("게시글 수정");
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 			
 			logger.info("boardUpdate Error!!!");
-			model.addAttribute("msg", "4");
 			model.addAttribute("bid", "bid");
 			model.addAttribute("page", page);
 			model.addAttribute("range", range);
-			model.addAttribute("update", "fail");
+			model.addAttribute("msg", "4");
 		}
 		
 		return "redirect:boardView";

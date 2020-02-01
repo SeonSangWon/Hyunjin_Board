@@ -98,8 +98,7 @@
 					</tr>
 					<tr>
 						<td colspan="2">
-							<textarea class="form-control" name="comment" rows="5" cols="30">
-							</textarea>
+							<textarea class="form-control" name="comment" rows="5" cols="30"></textarea>
 							<br />
 							<input type="submit" value="등록" class="form-control" style="width: 100px;"/>
 						</td>
@@ -125,7 +124,7 @@
 					</td>
 					<td align="right">
 						작성자 : ${reply.name} <br />
-						<span onclick="replyUpdate();">
+						<span onclick="replyUpdate(${reply.bid}, ${reply.uid});">
 							수정
 						</span>
 							&nbsp;&nbsp;&nbsp;
@@ -135,35 +134,32 @@
 					</td>
 				</tr>
 				<script>
-				function replyUpdate() {
-
-					var password = "";
-					var page = <%= request.getParameter("page") %>;
-					var range = <%= request.getParameter("range") %>;
-
-					//password + uid + bid + page + range
-					password = prompt("비밀번호 4자리를 입력해주세요.");
-					location.href = "replyUpdateGet?password=" + password
-							+ "&uid=${reply.uid}&bid=${reply.bid}&page=" + page + "&range=" + range;
-				}
-				
-				function replyDelete() {
+					function replyUpdate(bid, uid) {
+	
+						var password = "";
+						var url = "";
+						var page = <%= request.getParameter("page") %>;
+						var range = <%= request.getParameter("range") %>;
+						
+						//bid / uid / page / range / password
+						password = prompt("비밀번호 4자리를 입력해주세요.");
+						url = "passwordValidate?bid=" + bid + "&uid=" + uid +  
+								"&page=" + page + "&range=" + range + "&password=" + password;
+						
+						location.href=url;
+					}
 					
-					var password = "";
-					var page = <%= request.getParameter("page") %>;
-					var range = <%= request.getParameter("range") %>;
-
-					//password + uid + bid + page + range
-					password = prompt("비밀번호 4자리를 입력해주세요.");
-					location.href = "replyDelete?password=" + password
-							+ "&uid=${reply.uid}&bid=${reply.bid}&page=" + page + "&range=" + range;
-					
-				}
+					function replyDelete() {
+						
+					}
 				</script>
 			</c:forEach>
 		</table>
 		<div align="center">
-			<button onclick="location.href='boardList?page=<%= request.getParameter("page") %>&range=<%= request.getParameter("range") %>'">뒤로가기</button>
+			<button class="form-control" style="width: 100px;"
+				onclick="location.href='boardList?page=<%= request.getParameter("page") %>&range=<%= request.getParameter("range") %>'">
+				뒤로가기
+			</button>
 		</div>
 	</div>
 	
