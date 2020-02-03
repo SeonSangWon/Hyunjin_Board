@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hyunjin.main.DTO.ReplyDTO;
 import com.hyunjin.main.Service.IReplyService;
@@ -20,7 +22,7 @@ public class ReplyController {
 	private IReplyService replyService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ReplyController.class);
-		
+	
 	/**
 	 * 댓글 등록
 	 * @param replyDTO
@@ -39,9 +41,6 @@ public class ReplyController {
 		try {
 			page = Integer.parseInt(request.getParameter("page"));
 			range = Integer.parseInt(request.getParameter("range"));
-			
-			//줄바꿈
-			replyDTO.setComment(replyDTO.getComment().replace("\r\n","<br>"));
 			
 			replyService.ReplyInsert(replyDTO);
 			
@@ -63,6 +62,7 @@ public class ReplyController {
 		
 		return "redirect:boardView";
 	}
+
 	
 	/**
 	 * 댓글 수정 시, 비밀번호 인증
@@ -190,9 +190,6 @@ public class ReplyController {
 			range = Integer.parseInt(request.getParameter("range"));
 			
 			replyDTO.setUid(uid);
-			//줄바꿈 처리
-			replyDTO.setComment(replyDTO.getComment().replace("\r\n","<br>"));
-			
 			replyService.ReplyUpdate(replyDTO);
 			
 			//param : bid / uid / page / range

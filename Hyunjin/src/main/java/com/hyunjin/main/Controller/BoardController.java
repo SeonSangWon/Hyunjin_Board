@@ -126,10 +126,8 @@ public class BoardController {
 	public String boardInsert(BoardDTO boardDTO, Model model) {
 
 		try {
-			//줄바꿈
-			boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
-			
 			boardService.BoardInsert(boardDTO);
+			
 			model.addAttribute("msg", "1");
 			logger.info("게시글 등록");
 			
@@ -157,10 +155,8 @@ public class BoardController {
 		int range = Integer.parseInt(request.getParameter("range"));
 		
 		try {
-			//줄바꿈
-			boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
-			
 			boardService.BoardUpdate(boardDTO);
+			
 			model.addAttribute("bid", "bid");
 			model.addAttribute("page", page);
 			model.addAttribute("range", range);

@@ -79,7 +79,7 @@
 			<br />
 		
 			<!-- 댓글 입력 -->
-			<form method="POST" action="replyInsert">
+			<form id="replyForm" method="POST" action="replyInsert">
 				<table class="container">
 					<tr>
 						<td style="width: 150px;">NAME</td>

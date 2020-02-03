@@ -50,6 +50,10 @@ public class ReplyService implements IReplyService {
 	@Override
 	public void ReplyInsert(ReplyDTO replyDTO) {
 
+		//줄바꿈
+		replyDTO.setComment(replyDTO.getComment().replace("\r\n","<br>"));
+		
+		//return
 		replyDAO.ReplyInsert(replyDTO);
 	}
 
@@ -57,6 +61,10 @@ public class ReplyService implements IReplyService {
 	@Override
 	public void ReplyUpdate(ReplyDTO replyDTO) {
 
+		//줄바꿈
+		replyDTO.setComment(replyDTO.getComment().replace("\r\n","<br>"));
+				
+		//return
 		replyDAO.ReplyUpdate(replyDTO);
 	}
 

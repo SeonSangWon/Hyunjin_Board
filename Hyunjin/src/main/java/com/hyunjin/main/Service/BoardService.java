@@ -52,6 +52,10 @@ public class BoardService implements IBoardService {
 	@Override
 	public void BoardInsert(BoardDTO boardDTO) {
 		
+		//줄 바꿈
+		boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
+		
+		//return
 		boardDAO.BoardInsert(boardDTO);
 	}
 
@@ -59,6 +63,10 @@ public class BoardService implements IBoardService {
 	@Override
 	public void BoardUpdate(BoardDTO boardDTO) {
 		
+		//줄 바꿈
+		boardDTO.setComment(boardDTO.getComment().replace("\r\n","<br>"));
+		
+		//return
 		boardDAO.BoardUpdate(boardDTO);
 	}
 
