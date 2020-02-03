@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 	
-	<!-- Root Context: defines shared resources visible to all other web components -->
+    <!-- Root Context: defines shared resources visible to all other web components -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations" value="classpath:/application.properties" />
         <property name="fileEncoding" value="UTF-8" />
@@ -38,10 +38,5 @@
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
     </bean>
-    
-    <!-- Bean 등록 -->
-	<!-- DAOImpl에서 @Repository어노테이션을 명시해도 패키지를 스캔하지 못할 경우를 대비한 작업 -->
-	<context:component-scan base-package="com.hyunjin.main.DAO"></context:component-scan>
-	<context:component-scan base-package="com.hyunjin.main.Service"></context:component-scan>
-	
+
 </beans>
