@@ -78,6 +78,7 @@
 			</table>
 			<br />
 		
+			<%--
 			<!-- 댓글 입력 -->
 			<form id="replyForm" method="POST" action="replyInsert">
 				<table class="container">
@@ -108,6 +109,58 @@
 		</c:forEach>
 		<br />
 		<br />
+		 --%>
+		 
+		 	<form id="add-form" action="" method="POST">
+				<table class="container">
+					<tr>
+						<td style="width: 150px;">NAME</td>
+						<td>
+							<input type="hidden" name="bid" value="${board.bid}" />
+							<input type="hidden" name="page" value="<%= request.getParameter("page") %>" />
+							<input type="hidden" name="range" value="<%= request.getParameter("range") %>" />
+							<input type="text" name="name" class="form-control"/>
+						</td>
+					</tr>
+					<tr>
+						<td>PASSWORD</td>
+						<td>
+							<input type="password" name="password" class="form-control" maxlength="4" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<textarea class="form-control" name="comment" rows="5" cols="30"></textarea>
+							<br />
+							<input type="submit" value="등록" class="form-control" style="width: 100px;"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</c:forEach>
+		<br />
+		<br />
+		<script>
+			
+			$("#add-form").submit( function(event){
+
+				//모든 이벤트 중지 [submit]
+				event.preventDefault();
+
+				// serialize는 form의 <input> 요소들의 name이 배열형태로 그 값이 인코딩되어 URL query string으로 하는 메서드
+				let queryString = $(this).serialize();
+
+				$.ajax({
+					url: "replyInsert",
+					type: "POST",
+					dataType: "json",
+					data: queryString,
+					success: function(result){
+						alert('댓글이 등록되었습니다.');
+					}
+				})
+			});
+		</script>
 		
 		<!-- 댓글 내용 -->
 		<table class="container">
