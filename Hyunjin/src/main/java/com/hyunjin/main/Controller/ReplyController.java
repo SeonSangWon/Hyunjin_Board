@@ -34,6 +34,7 @@ public class ReplyController {
 	 */
 	@ResponseBody
 	@RequestMapping("replyInsert")
+	//public @ResponseBody replyInsert(@RequestParam ReplyDTO vo) {
 	public ReplyDTO replyInsert(@ModelAttribute ReplyDTO vo) {
 		
 		try{
