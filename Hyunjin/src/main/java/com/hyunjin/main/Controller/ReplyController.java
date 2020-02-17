@@ -32,6 +32,20 @@ public class ReplyController {
 	 * @param msg		댓글 등록 메시지
 	 * @return boardView.jsp
 	 */
+	@ResponseBody
+	@RequestMapping("replyInsert")
+	public ReplyDTO replyInsert(@ModelAttribute ReplyDTO vo) {
+		
+		try{
+			ReplyDTO replyDTO = replyService.replyInsert(vo);
+			
+		}catch(Exception e) {
+			//Error	
+		}
+		return replyDTO;
+	}
+	
+	/*
 	@RequestMapping(value = "replyInsert", method = RequestMethod.POST)
 	public String replyInsert(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
 		
@@ -62,6 +76,7 @@ public class ReplyController {
 		
 		return "redirect:boardView";
 	}
+	*/
 
 	
 	/**
