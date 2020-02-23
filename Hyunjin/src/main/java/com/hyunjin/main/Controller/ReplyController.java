@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hyunjin.main.DTO.ReplyDTO;
 import com.hyunjin.main.Service.IReplyService;
@@ -32,15 +30,6 @@ public class ReplyController {
 	 * @param msg		댓글 등록 메시지
 	 * @return boardView.jsp
 	*/
-	@ResponseBody
-	@RequestMapping("replyInsert")
-	//public @ResponseBody replyInsert(@RequestParam ReplyDTO vo) {
-	public ReplyDTO replyInsert(@ModelAttribute ReplyDTO vo) {
-		
-		return null;
-	}
-	
-	/*
 	@RequestMapping(value = "replyInsert", method = RequestMethod.POST)
 	public String replyInsert(ReplyDTO replyDTO, Model model, HttpServletRequest request) {
 		
@@ -71,7 +60,6 @@ public class ReplyController {
 		
 		return "redirect:boardView";
 	}
-	*/
 	
 	/**
 	 * 댓글 수정 시, 비밀번호 인증
