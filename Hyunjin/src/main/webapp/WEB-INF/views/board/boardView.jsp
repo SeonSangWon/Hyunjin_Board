@@ -29,6 +29,8 @@
 	<title>게시글</title>
 <!-- bootstrap -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- AJAX -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 	var msg = <%= request.getParameter("msg") %>;
 
@@ -162,6 +164,5 @@
 			</button>
 		</div>
 	</div>
-	
 </body>
 </html>
