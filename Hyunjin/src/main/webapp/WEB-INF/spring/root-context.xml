@@ -11,19 +11,15 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 	
-    <!-- Root Context: defines shared resources visible to all other web components -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:/application.properties" />
-        <property name="fileEncoding" value="UTF-8" />
-    </bean>
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<context:property-placeholder location="classpath:/database/database.properties" />
 	
-    <!-- MySQL dataSource -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}" />
-        <property name="url" value="${jdbc.url}" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
-    </bean>
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"  id="dataSource">
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+	</bean>
     
     <!-- DB와의 연결과 SQL의 실행에 대한 모든 것을 가진 객체 -->
     <!-- mybatis SqlSessionFactoryBean -->

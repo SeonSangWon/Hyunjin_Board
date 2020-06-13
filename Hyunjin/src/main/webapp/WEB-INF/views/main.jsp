@@ -152,13 +152,13 @@ body, html {
 		var Y_point = 37.520510; // Y 좌표
 		var X_point = 126.781394; // X 좌표
 		var zoomLevel = 18; // 첫 로딩시 보일 지도의 확대 레벨
-		var markerTitle = "와이제이전자"; // 현재 위치 마커에 마우스를 올렸을때 나타나는 이름
+		var markerTitle = "크린토피아"; // 현재 위치 마커에 마우스를 올렸을때 나타나는 이름
 		var markerMaxWidth = 300; // 마커를 클릭했을때 나타나는 말풍선의 최대 크기
 		
 		var contentString = '<div id="content">' +
 		'<div id="siteNotice">' +
 		'</div>' +
-		'<h4 id="firstHeading" class="firstHeading">와이제이전자 4층</h4>' +
+		'<h4 id="firstHeading" class="firstHeading">크린토피아 4층</h4>' +
 		'<div id="bodyContent">' +
 		'<p>경기도 부천시 부천로409번길 59<br />' +
 		'Tel. 010-5392-7482</p>' +
